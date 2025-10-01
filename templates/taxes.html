@@ -1,0 +1,119 @@
+{{ template "base" . }}
+
+{{ define "title" }}Invoice Detail | Shaylan Group{{ end }}
+
+{{ define "content" }}
+
+<!-- Page Content-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+                <h4 class="page-title">Taxes</h4>
+                <div class="">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Shaylan</a>
+                        </li><!--end nav-item-->
+                        <li class="breadcrumb-item active">Taxes</li>
+                    </ol>
+                </div>
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Taxes Details</h4>
+                        </div><!--end col-->
+                        <div class="col-auto">
+                            <button class="btn bg-primary text-white" data-bs-toggle="modal"
+                                data-bs-target="#addRate"><i class="fas fa-plus me-1"></i> Add Rate</button>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </div><!--end card-header-->
+                <div class="card-body pt-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0" id="datatable_1">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tax Rate (Band)</th>
+                                    <th>Tax Rate</th>
+                                    <th>Taxable Income 22/23</th>
+                                    <th>Taxable Income23/24</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tax-free Personal Allowance</td>
+                                    <td>0%</td>
+                                    <td>Up to $12500</td>
+                                    <td>Up to $14000</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Starter Rate</td>
+                                    <td>15%</td>
+                                    <td>$12500 to $14500</td>
+                                    <td>$14500 to $16500</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Basic Rate</td>
+                                    <td>20%</td>
+                                    <td>$13500 to $15500</td>
+                                    <td>$16500 to $18500</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Intermediate Rate</td>
+                                    <td>24%</td>
+                                    <td>$16500 to $18500</td>
+                                    <td>$18500 to $20000</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Higher Rate</td>
+                                    <td>32%</td>
+                                    <td>$18500 to $20000</td>
+                                    <td>$20000 to $21000</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Additional Rate</td>
+                                    <td>45%</td>
+                                    <td>Over $20000</td>
+                                    <td>Over $21000</td>
+                                    <td class="text-end">
+                                        <a href="#"><i class="las la-pen text-secondary fs-18"></i></a>
+                                        <a href="#"><i class="las la-trash-alt text-secondary fs-18"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div><!-- container -->
+{{ end }}
