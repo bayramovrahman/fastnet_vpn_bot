@@ -203,4 +203,15 @@ const initVerticalMenu = () => {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleButton = document.getElementById('togglemenu');
+  const logoText = document.querySelector('.logo-text');
+  
+  if (toggleButton && logoText) {
+    toggleButton.addEventListener('click', function() {
+      logoText.classList.toggle('hidden');
+    });
+  }
+});
+
 initVerticalMenu();

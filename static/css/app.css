@@ -1785,15 +1785,32 @@ hr.hr-dashed {
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.logo-text {
+  margin-left: 8px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffffff;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.logo-text.hidden {
+  opacity: 0;
+  transform: translateX(-10px);
+  pointer-events: none;
+}
 .startbar .brand .logo-sm {
-  height: 24px;
+  height: 48px;
   display: none;
 }
 .startbar .brand .logo-lg {
   -webkit-transition: 0.3s;
   transition: 0.3s;
   margin-left: 4px;
-  height: 24px;
+  height: 48px;
 }
 .startbar .startbar-menu {
   padding-bottom: var(--bs-topbar-height);

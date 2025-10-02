@@ -9,9 +9,10 @@
   <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
   <meta content="" name="author" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <link rel="shortcut icon" href="/static/images/favicon.ico">
+  <link rel="shortcut icon" href="/static/images/logo.png">
   <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
+  <link href="/static/css/app.css" rel="stylesheet" type="text/css" />
   <link href="/static/css/app.min.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -21,8 +22,6 @@
   <div class="topbar d-print-none">
     <div class="container-fluid">
       <nav class="topbar-custom d-flex justify-content-between" id="topbar-custom">
-
-
         <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
           <li>
             <button class="nav-link mobile-menu-btn nav-icon" id="togglemenu">
@@ -286,14 +285,15 @@
   <div class="startbar d-print-none">
     <!--start brand-->
     <div class="brand">
-      <a href="index.html" class="logo">
+      <a href="/home" class="logo">
         <span>
-          <img src="/static/images/logo-sm.png" alt="logo-small" class="logo-sm">
+          <img src="/static/images/logo.png" alt="logo-small" class="logo-sm">
         </span>
         <span class="">
-          <img src="/static/images/logo-light.png" alt="logo-large" class="logo-lg logo-light">
-          <img src="/static/images/logo-dark.png" alt="logo-large" class="logo-lg logo-dark">
+          <img src="/static/images/logo.png" alt="logo-large" class="logo-lg logo-light">
+          <img src="/static/images/logo.png" alt="logo-large" class="logo-lg logo-dark">
         </span>
+        <span class="logo-text">Fastnet</span>
       </a>
     </div>
     <!--end brand-->
@@ -308,17 +308,23 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="/home">
                 <i class="iconoir-report-columns menu-icon"></i>
                 <span>Dashboard</span>
               </a>
             </li><!--end nav-item-->
             <li class="nav-item">
-              <a class="nav-link" href="invoice.html">
+              <a class="nav-link" href="/invoice">
                 <i class="iconoir-paste-clipboard menu-icon"></i>
                 <span>Invoice</span>
               </a>
             </li><!--end nav-item-->
+            <li class="nav-item">
+              <a class="nav-link" href="/taxes">
+                <i class="iconoir-plug-type-l menu-icon"></i>
+                <span>Taxes</span>
+              </a>
+            </li>
           </ul><!--end navbar-nav--->
         </div>
       </div><!--end startbar-collapse-->
@@ -334,6 +340,50 @@
 
       {{ block "content" . }}{{ end }}
 
+      <!--Start Rightbar-->
+      <!--Start Rightbar/offcanvas-->
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="Appearance" aria-labelledby="AppearanceLabel">
+        <div class="offcanvas-header border-bottom justify-content-between">
+          <h5 class="m-0 font-14" id="AppearanceLabel">Appearance</h5>
+          <button type="button" class="btn-close text-reset p-0 m-0 align-self-center" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <h6>Account Settings</h6>
+          <div class="p-2 text-start mt-3">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="settings-switch1">
+              <label class="form-check-label" for="settings-switch1">Auto updates</label>
+            </div><!--end form-switch-->
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="settings-switch2" checked>
+              <label class="form-check-label" for="settings-switch2">Location Permission</label>
+            </div><!--end form-switch-->
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="settings-switch3">
+              <label class="form-check-label" for="settings-switch3">Show offline Contacts</label>
+            </div><!--end form-switch-->
+          </div><!--end /div-->
+          <h6>General Settings</h6>
+          <div class="p-2 text-start mt-3">
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="settings-switch4">
+              <label class="form-check-label" for="settings-switch4">Show me Online</label>
+            </div><!--end form-switch-->
+            <div class="form-check form-switch mb-2">
+              <input class="form-check-input" type="checkbox" id="settings-switch5" checked>
+              <label class="form-check-label" for="settings-switch5">Status visible to all</label>
+            </div><!--end form-switch-->
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="settings-switch6">
+              <label class="form-check-label" for="settings-switch6">Notifications Popup</label>
+            </div><!--end form-switch-->
+          </div><!--end /div-->
+        </div><!--end offcanvas-body-->
+      </div>
+      <!--end Rightbar/offcanvas-->
+      <!--end Rightbar-->
+
       <!--Start Footer-->
       <footer class="footer text-center text-sm-start d-print-none">
         <div class="container-fluid">
@@ -344,9 +394,9 @@
                   <p class="text-muted mb-0">
                     ©
                     <script> document.write(new Date().getFullYear()) </script>
-                    Shaylan Group
+                    fastnetvpn.com
                     <span class="text-muted d-none d-sm-inline-block float-end">
-                      Designed by Rahman Bayramow
+                      Designed by Fastnet
                     </span>
                   </p>
                 </div>

@@ -4,16 +4,36 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/config"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/handlers"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/render"
 )
 
 const portNumber = ":8080"
 
 func main() {
-	r := routes()
+	var app config.AppConfig
 
-	fmt.Println("Server running at http://localhost" + portNumber)
-	err := http.ListenAndServe(portNumber, r)
+	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Cannot create template cache")
 	}
+
+	app.TemplateCache = templateCache
+	app.UseCache = false
+
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+	render.NewTemplates(&app)
+
+	fmt.Printf("Starting serve on port %s", portNumber)
+
+	serve := &http.Server{
+		Addr: portNumber,
+		Handler: routes(),
+	}
+
+	err = serve.ListenAndServe()
+	log.Fatal(err)
 }
