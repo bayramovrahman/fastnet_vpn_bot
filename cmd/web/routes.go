@@ -15,6 +15,7 @@ func routes() http.Handler {
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/taxes", handlers.Repo.Taxes)
+	mux.Get("/login", handlers.Repo.AdminLogin)
 	mux.Get("/invoice", handlers.Repo.Invoice)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
