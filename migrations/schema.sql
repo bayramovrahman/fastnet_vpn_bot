@@ -44,6 +44,7 @@ CREATE TABLE public.users (
     email character varying(255) NOT NULL,
     password character varying(60) NOT NULL,
     is_verified boolean DEFAULT false NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL,
     access_level integer DEFAULT 1 NOT NULL,
     signup_ip character varying(255) NOT NULL,
     signup_country character varying(255) NOT NULL,

@@ -12,7 +12,7 @@ func routes() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 
-	mux.Get("/", handlers.Repo.Home)
+	mux.Get("/", handlers.Repo.AdminLogin)
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/taxes", handlers.Repo.Taxes)
 	mux.Get("/login", handlers.Repo.AdminLogin)

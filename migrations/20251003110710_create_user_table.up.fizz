@@ -6,6 +6,7 @@ create_table("users") {
   t.Column("email", "string", {})
   t.Column("password", "string", {"size": 60})
   t.Column("is_verified", "boolean", {"default": false})
+  t.Column("is_admin", "boolean", {"default": false})
   t.Column("access_level", "integer", {"default": 1})
   t.Column("signup_ip", "string", {})
   t.Column("signup_country", "string", {}) 
