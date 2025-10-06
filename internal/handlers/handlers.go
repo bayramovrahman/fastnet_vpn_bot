@@ -4,8 +4,11 @@ import (
 	"net/http"
 
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/config"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/driver"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/models"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/render"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/repository"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/repository/dbrepo"
 )
 
 // Repo the repository used by the handlers
@@ -14,12 +17,14 @@ var Repo *Repository
 // Repository is the repository type
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(app *config.AppConfig) *Repository {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
-		App: app,
+		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 
@@ -39,17 +44,7 @@ func (m *Repository) Invoice(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) Taxes(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "taxes.page.tmpl", &models.TemplateData{})
 }
+
 func (m *Repository) AdminLogin(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "login.page.tmpl", &models.TemplateData{})
-}
-
-func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	// perform some logic
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello, again!"
-
-	// send the data to the template
-	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
-		StringMap: stringMap,
-	})
 }
