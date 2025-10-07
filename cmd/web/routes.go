@@ -11,11 +11,14 @@ import (
 func routes() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
+	mux.Use(NoSurf)
+	mux.Use(SessionLoad)
 
-	mux.Get("/", handlers.Repo.AdminLogin)
+	mux.Get("/", handlers.Repo.Login)
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/taxes", handlers.Repo.Taxes)
-	mux.Get("/login", handlers.Repo.AdminLogin)
+	mux.Get("/login", handlers.Repo.Login)
+	mux.Post("/login", handlers.Repo.PostLogin)
 	mux.Get("/invoice", handlers.Repo.Invoice)
 
 	fileServer := http.FileServer(http.Dir("./static/"))

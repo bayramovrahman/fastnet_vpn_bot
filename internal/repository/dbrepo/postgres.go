@@ -2,9 +2,11 @@ package dbrepo
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (m *postgresDBRepo) AllUsers() bool {
@@ -12,7 +14,7 @@ func (m *postgresDBRepo) AllUsers() bool {
 }
 
 func (m *postgresDBRepo) GetUserById(id int) (models.User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	query := `select id, first_name, last_name, email, password, access_level, created_at, updated_at
@@ -59,4 +61,31 @@ func (m *postgresDBRepo) UpdateUser(user models.User) error {
 	}
 
 	return nil
+}
+
+// Authenticate authenticates a user
+func (m *postgresDBRepo) Authenticate(email, testPassword string) (int, string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `select id, password from users where email = $1`
+
+	var id int
+	var hashedPassword string
+
+	row := m.DB.QueryRowContext(ctx, query, email)
+
+	err := row.Scan(&id, &hashedPassword)
+	if err != nil {
+		return id, "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(testPassword))
+	if err == bcrypt.ErrMismatchedHashAndPassword {
+		return 0, "", errors.New("incorrect password")
+	} else if err != nil {
+		return 0, "", err
+	}
+
+	return id, hashedPassword, nil
 }
