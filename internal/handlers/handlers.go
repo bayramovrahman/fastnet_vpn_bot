@@ -63,6 +63,7 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	email := r.Form.Get("email")
 	password := r.Form.Get("password")
+	rememberMe := r.Form.Get("remember_me")
 
 	form := forms.New(r.PostForm)
 	form.Required("email", "password")
@@ -85,6 +86,13 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.App.Session.Put(r.Context(), "user_id", id)
+	
+	// Handle "Remember me" functionality
+	if rememberMe == "on" {
+		// Store flag to indicate this is an extended session
+		m.App.Session.Put(r.Context(), "remember_me", true)
+	}
+	
 	m.App.Session.Put(r.Context(), "flash", "Logged in successfully")
 	http.Redirect(w, r, "/home", http.StatusSeeOther)
 }

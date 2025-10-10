@@ -13,6 +13,7 @@ func routes() http.Handler {
 	mux.Use(middleware.Recoverer)
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
+	mux.Use(ExtendedSessionCheck)
 
 	mux.Get("/", handlers.Repo.Login)
 	mux.Get("/login", handlers.Repo.Login)
