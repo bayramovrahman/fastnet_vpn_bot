@@ -22,6 +22,7 @@ func routes() http.Handler {
 		r.Use(Auth)
 		r.Get("/home", handlers.Repo.Home)
 		r.Get("/taxes", handlers.Repo.Taxes)
+		r.Get("/logout", handlers.Repo.Logout)
 		r.Get("/invoice", handlers.Repo.Invoice)
 	})
 
