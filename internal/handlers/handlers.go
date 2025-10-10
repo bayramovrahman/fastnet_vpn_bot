@@ -59,6 +59,9 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Println(err)
+		m.App.Session.Put(r.Context(), "error", "Unable to parse form")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
 	email := r.Form.Get("email")
@@ -79,17 +82,14 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 	id, _, err := m.DB.Authenticate(email, password)
 	if err != nil {
 		log.Println(err)
-
-		m.App.Session.Put(r.Context(), "error", "Invalid login credentials")
-		http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+		m.App.Session.Put(r.Context(), "error", "Invalid email or password")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
 	m.App.Session.Put(r.Context(), "user_id", id)
 	
-	// Handle "Remember me" functionality
 	if rememberMe == "on" {
-		// Store flag to indicate this is an extended session
 		m.App.Session.Put(r.Context(), "remember_me", true)
 	}
 	
