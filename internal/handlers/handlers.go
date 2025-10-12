@@ -7,6 +7,7 @@ import (
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/config"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/driver"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/forms"
+	"github.com/bayramovrahman/fastnet_vpn_bot/internal/helpers"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/models"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/render"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/repository"
@@ -48,6 +49,11 @@ func (m *Repository) Taxes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) Login(w http.ResponseWriter, r *http.Request) {
+	if helpers.IsAuthenticated(r) {
+		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		return
+	}
+
 	render.Template(w, r, "login.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})
@@ -87,7 +93,17 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user, err := m.DB.GetUserById(id)
+	if err != nil {
+		log.Println(err)
+		m.App.Session.Put(r.Context(), "error", "Unable to retrieve user information")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
 	m.App.Session.Put(r.Context(), "user_id", id)
+	m.App.Session.Put(r.Context(), "user_first_name", user.FirstName)
+	m.App.Session.Put(r.Context(), "user_last_name", user.LastName)
 	
 	if rememberMe == "on" {
 		m.App.Session.Put(r.Context(), "remember_me", true)

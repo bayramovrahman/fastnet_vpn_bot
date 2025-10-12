@@ -29,6 +29,16 @@ func AddDefaultData(tmplData *models.TemplateData, r *http.Request) *models.Temp
 
 	if app.Session.Exists(r.Context(), "user_id") {
 		tmplData.IsAuthenticated = 1
+		
+		firstName := app.Session.GetString(r.Context(), "user_first_name")
+		lastName := app.Session.GetString(r.Context(), "user_last_name")
+		
+		if tmplData.StringMap == nil {
+			tmplData.StringMap = make(map[string]string)
+		}
+
+		tmplData.StringMap["user_first_name"] = firstName
+		tmplData.StringMap["user_last_name"] = lastName
 	}
 
 	return tmplData
