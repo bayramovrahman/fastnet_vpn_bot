@@ -13,25 +13,35 @@ import (
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/handlers"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/helpers"
 	"github.com/bayramovrahman/fastnet_vpn_bot/internal/render"
+	"github.com/joho/godotenv"
 )
 
-const portNumber = ":8080"
 var app config.AppConfig
 var session *scs.SessionManager
 var infoLog *log.Logger
 var errorLog *log.Logger
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	
 	db, err := run()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.SQL.Close()
 
-	fmt.Printf("Starting serve on port %s", portNumber)
+	portNumber := os.Getenv("APP_PORT")
+	if portNumber == "" {
+		portNumber = "8080"
+	}
+
+	fmt.Printf("Starting serve on port :%s\n", portNumber)
 
 	srv := &http.Server{
-		Addr:    portNumber,
+		Addr:    ":" + portNumber,
 		Handler: routes(),
 	}
 
@@ -42,6 +52,10 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
+	// Get IN_PRODUCTION from environment
+	inProduction := os.Getenv("IN_PRODUCTION")
+	app.InProduction = inProduction == "true"
+
 	app.InProduction = false
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
@@ -58,9 +72,18 @@ func run() (*driver.DB, error) {
 
 	app.Session = session
 
+	// Build database connection string from environment variables
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+
+	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s", dbHost, dbPort, dbName, dbUser, dbPassword)
+
 	// connect to database
 	log.Println("Connecting to database...")
-	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=fastnet user=postgres password=Postgres[2025]")
+	db, err := driver.ConnectSQL(dsn)
 	if err != nil {
 		log.Fatal("Cannot connect to database! Dying...")
 	}

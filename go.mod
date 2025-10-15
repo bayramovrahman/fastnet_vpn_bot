@@ -17,6 +17,7 @@ require (
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/jackc/pgx/v4 v4.18.3 // indirect
 	github.com/jackc/pgx/v5 v5.7.6 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/justinas/nosurf v1.2.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
