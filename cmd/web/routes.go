@@ -18,6 +18,9 @@ func routes() http.Handler {
 	mux.Get("/", handlers.Repo.Login)
 	mux.Get("/login", handlers.Repo.Login)
 	mux.Post("/login", handlers.Repo.PostLogin)
+	mux.Get("/verify", handlers.Repo.Verify)
+	mux.Post("/verify", handlers.Repo.PostVerify)
+	mux.Post("/resend-code", handlers.Repo.ResendCode)
 	
 	mux.Group(func(r chi.Router) {
 		r.Use(Auth)
