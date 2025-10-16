@@ -1,0 +1,175 @@
+{{ template "base" . }}
+
+{{ define "title" }}Profile | Fastnet VPN{{ end }}
+
+{{ define "content" }}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-title-box d-md-flex justify-content-md-between align-items-center">
+        <h4 class="page-title">Profile</h4>
+        <div class="">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="#">Fastnet VPN</a>
+            </li><!--end nav-item-->
+            <li class="breadcrumb-item active">Profile</li>
+          </ol>
+        </div>
+      </div><!--end page-title-box-->
+    </div><!--end col-->
+  </div><!--end row-->
+
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body p-4  rounded text-center img-bg">
+        </div><!--end card-body-->
+        <div class="position-relative">
+          <div class="shape overflow-hidden text-card-bg">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="card-body mt-n6">
+          <div class="row align-items-center">
+            <div class="col ">
+              <div class="d-flex align-items-center">
+                <div class="position-relative">
+                  <img src="/static/images/users/avatar-5.jpg" alt="" class="rounded-circle img-fluid">
+                  <div class="position-absolute top-50 start-100 translate-middle">
+                    <img src="/static/images/flags/us_flag.jpg" alt=""
+                      class="rounded-circle thumb-sm border border-3 border-white">
+                  </div>
+                </div>
+                <div class="flex-grow-1 text-truncate ms-3 align-self-end">
+                  <h5 class="m-0 fs-3 fw-bold">{{.StringMap.user_first_name}} {{.StringMap.user_last_name}}</h5>
+                  <p class="text-muted mb-0">@{{.StringMap.user_name}}</p>
+                </div><!--end media body-->
+              </div><!--end media-->
+            </div><!--end col-->
+          </div><!--end row-->
+        </div><!--end card-body-->
+      </div><!--end card-->
+    </div> <!--end col-->
+    <div class="col-md-8">
+      <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link fw-medium active" data-bs-toggle="tab" href="#settings" role="tab"
+            aria-selected="false">Settings</a>
+        </li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane p-3 active" id="settings" role="tabpanel">
+          <div class="card">
+            <div class="card-header">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h4 class="card-title">Personal Information</h4>
+                </div><!--end col-->
+              </div> <!--end row-->
+            </div><!--end card-header-->
+            <div class="card-body pt-0">
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">First Name</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="text" class="form-control" value="{{.StringMap.user_first_name}}" aria-describedby="basic-addon2" disabled>
+                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-user"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">Last Name</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="text" class="form-control" value="{{.StringMap.user_last_name}}" aria-describedby="basic-addon2" disabled>
+                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-user-friends"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">Email Address</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="text" class="form-control" value="rosa.dodson@demo.com" aria-describedby="basic-addon2" disabled>
+                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-envelope"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div><!--end card-body-->
+          </div><!--end card-->
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Change Password</h4>
+            </div><!--end card-header-->
+            <div class="card-body pt-0">
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">Current Password</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon2">
+                    <span span class="input-group-text" id="basic-addon2"><i class="fas fa-lock-open"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">New Password</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="password" class="form-control" placeholder="New Password" aria-describedby="basic-addon2">
+                    <span span class="input-group-text" id="basic-addon2"><i class="fas fa-lock"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3 row">
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">Confirm Password</label>
+                <div class="col-lg-9 col-xl-8">
+                  <div class="input-group">
+                    <input type="password" class="form-control" placeholder="Re-Password" aria-describedby="basic-addon2">
+                    <span span class="input-group-text" id="basic-addon2"><i class="fas fa-redo"></i></span>
+                  </div>
+                  <!-- <input class="form-control" type="password" placeholder="Re-Password"> -->
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-lg-9 col-xl-8 offset-lg-3">
+                  <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+              </div>
+            </div><!--end card-body-->
+          </div><!--end card-->
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Security Account</h4>
+            </div><!--end card-header-->
+            <div class="card-body pt-0">
+              <div class="form-check d-flex align-items-center justify-content-between">
+                <label class="form-check-label mb-0" for="Email_Notifications">E-mail Verification</label>
+                <div class="form-check form-switch form-switch-success m-0">
+                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess" checked>
+                </div>
+              </div>
+
+              <div class="form-check d-flex align-items-center justify-content-between mt-3">
+                <label class="form-check-label mb-0" for="Email_Notifications">Phone Verification</label>
+                <div class="form-check form-switch form-switch-success m-0">
+                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                </div>
+              </div>
+
+              <div class="form-check d-flex align-items-center justify-content-between mt-3">
+                <label class="form-check-label mb-0" for="Email_Notifications">2-FA Authentication</label>
+                <div class="form-check form-switch form-switch-success m-0">
+                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                </div>
+              </div>
+            </div><!--end card-body-->
+          </div><!--end card-->
+        </div>
+      </div>
+    </div> <!--end col-->
+  </div><!--end row-->
+</div><!-- container -->
+{{ end }}

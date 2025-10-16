@@ -1,0 +1,19 @@
+create_table("user_login_security") {
+  t.Column("id", "integer", {primary: true})
+  t.Column("user_id", "integer", {})
+  t.Column("email_verification", "boolean", {"default": false})
+  t.Column("phone_verification", "boolean", {"default": false})
+  t.Column("multi_factor_auth", "boolean", {"default": false})
+  t.Column("verification_code", "string", {"null": true, "size": 6})
+  t.Column("code_expires_at", "timestamp", {"null": true})
+  t.Column("phone_number", "string", {"null": true})
+  t.Column("last_verification_sent_at", "timestamp", {"null": true})
+  t.Column("failed_attempts", "integer", {"default": 0})
+  t.Column("locked_until", "timestamp", {"null": true})
+  t.Column("created_at", "datetime", {})
+  t.Column("updated_at", "datetime", {})
+  
+  t.ForeignKey("user_id", {"users": ["id"]}, {"on_delete": "cascade"})
+}
+
+add_index("user_login_security", "user_id", {"unique": true})

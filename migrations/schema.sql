@@ -33,6 +33,51 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO postgres;
 
 --
+-- Name: user_login_security; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_login_security (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    email_verification boolean DEFAULT false NOT NULL,
+    phone_verification boolean DEFAULT false NOT NULL,
+    multi_factor_auth boolean DEFAULT false NOT NULL,
+    verification_code character varying(6),
+    code_expires_at timestamp without time zone,
+    phone_number character varying(255),
+    last_verification_sent_at timestamp without time zone,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    locked_until timestamp without time zone,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.user_login_security OWNER TO postgres;
+
+--
+-- Name: user_login_security_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_login_security_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_login_security_id_seq OWNER TO postgres;
+
+--
+-- Name: user_login_security_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_login_security_id_seq OWNED BY public.user_login_security.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -78,6 +123,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: user_login_security id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_login_security ALTER COLUMN id SET DEFAULT nextval('public.user_login_security_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -93,6 +145,14 @@ ALTER TABLE ONLY public.schema_migration
 
 
 --
+-- Name: user_login_security user_login_security_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_login_security
+    ADD CONSTRAINT user_login_security_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -105,6 +165,21 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
+
+
+--
+-- Name: user_login_security_user_id_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX user_login_security_user_id_idx ON public.user_login_security USING btree (user_id);
+
+
+--
+-- Name: user_login_security user_login_security_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_login_security
+    ADD CONSTRAINT user_login_security_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --

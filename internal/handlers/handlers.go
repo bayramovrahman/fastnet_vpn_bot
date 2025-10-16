@@ -52,6 +52,10 @@ func (m *Repository) Taxes(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "taxes.page.tmpl", &models.TemplateData{})
 }
 
+func (m *Repository) Profile(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, r, "profile.page.tmpl", &models.TemplateData{})
+}
+
 func (m *Repository) Login(w http.ResponseWriter, r *http.Request) {
 	if helpers.IsAuthenticated(r) {
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
@@ -125,6 +129,7 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	// Store verification data in session
 	m.App.Session.Put(r.Context(), "pending_user_id", id)
+	m.App.Session.Put(r.Context(), "pending_user_name", user.Username)
 	m.App.Session.Put(r.Context(), "pending_user_first_name", user.FirstName)
 	m.App.Session.Put(r.Context(), "pending_user_last_name", user.LastName)
 	m.App.Session.Put(r.Context(), "verification_code", code)
@@ -184,6 +189,7 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 	if time.Now().Unix() > expiresAt {
 		// Clean up session
 		m.App.Session.Remove(r.Context(), "pending_user_id")
+		m.App.Session.Remove(r.Context(), "pending_user_name")
 		m.App.Session.Remove(r.Context(), "pending_user_first_name")
 		m.App.Session.Remove(r.Context(), "pending_user_last_name")
 		m.App.Session.Remove(r.Context(), "verification_code")
@@ -205,12 +211,14 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 
 	// Code is correct - complete login
 	userId := m.App.Session.GetInt(r.Context(), "pending_user_id")
+	userName := m.App.Session.GetString(r.Context(), "pending_user_name")
 	firstName := m.App.Session.GetString(r.Context(), "pending_user_first_name")
 	lastName := m.App.Session.GetString(r.Context(), "pending_user_last_name")
 	rememberMe := m.App.Session.GetBool(r.Context(), "pending_remember_me")
 
 	// Set authenticated session
 	m.App.Session.Put(r.Context(), "user_id", userId)
+	m.App.Session.Put(r.Context(), "user_name", userName)
 	m.App.Session.Put(r.Context(), "user_first_name", firstName)
 	m.App.Session.Put(r.Context(), "user_last_name", lastName)
 
@@ -220,6 +228,7 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 
 	// Clean up verification session
 	m.App.Session.Remove(r.Context(), "pending_user_id")
+	m.App.Session.Remove(r.Context(), "pending_user_name")
 	m.App.Session.Remove(r.Context(), "pending_user_first_name")
 	m.App.Session.Remove(r.Context(), "pending_user_last_name")
 	m.App.Session.Remove(r.Context(), "verification_code")
