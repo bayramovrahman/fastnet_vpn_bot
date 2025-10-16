@@ -96,7 +96,7 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 	id, _, err := m.DB.Authenticate(emailForm, password)
 	if err != nil {
 		log.Println(err)
-		m.App.Session.Put(r.Context(), "error", "Invalid email or password")
+		m.App.Session.Put(r.Context(), "error", "Invalid e-mail or password")
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
@@ -129,9 +129,10 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	// Store verification data in session
 	m.App.Session.Put(r.Context(), "pending_user_id", id)
-	m.App.Session.Put(r.Context(), "pending_user_name", user.Username)
+	m.App.Session.Put(r.Context(), "pending_user_username", user.Username)
 	m.App.Session.Put(r.Context(), "pending_user_first_name", user.FirstName)
 	m.App.Session.Put(r.Context(), "pending_user_last_name", user.LastName)
+	m.App.Session.Put(r.Context(), "pending_user_email", user.Email)
 	m.App.Session.Put(r.Context(), "verification_code", code)
 	m.App.Session.Put(r.Context(), "code_expires", time.Now().Add(10*time.Minute).Unix())
 
@@ -139,7 +140,7 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 		m.App.Session.Put(r.Context(), "pending_remember_me", true)
 	}
 
-	m.App.Session.Put(r.Context(), "warning", "Verification code sent to your email")
+	m.App.Session.Put(r.Context(), "warning", "Verification code sent to your e-mail")
 	http.Redirect(w, r, "/verify", http.StatusSeeOther)
 }
 
@@ -189,9 +190,10 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 	if time.Now().Unix() > expiresAt {
 		// Clean up session
 		m.App.Session.Remove(r.Context(), "pending_user_id")
-		m.App.Session.Remove(r.Context(), "pending_user_name")
+		m.App.Session.Remove(r.Context(), "pending_user_username")
 		m.App.Session.Remove(r.Context(), "pending_user_first_name")
 		m.App.Session.Remove(r.Context(), "pending_user_last_name")
+		m.App.Session.Remove(r.Context(), "pending_user_email")
 		m.App.Session.Remove(r.Context(), "verification_code")
 		m.App.Session.Remove(r.Context(), "code_expires")
 		m.App.Session.Remove(r.Context(), "pending_remember_me")
@@ -211,16 +213,18 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 
 	// Code is correct - complete login
 	userId := m.App.Session.GetInt(r.Context(), "pending_user_id")
-	userName := m.App.Session.GetString(r.Context(), "pending_user_name")
+	username := m.App.Session.GetString(r.Context(), "pending_user_username")
 	firstName := m.App.Session.GetString(r.Context(), "pending_user_first_name")
 	lastName := m.App.Session.GetString(r.Context(), "pending_user_last_name")
+	userEmail := m.App.Session.GetString(r.Context(), "pending_user_email")
 	rememberMe := m.App.Session.GetBool(r.Context(), "pending_remember_me")
 
 	// Set authenticated session
 	m.App.Session.Put(r.Context(), "user_id", userId)
-	m.App.Session.Put(r.Context(), "user_name", userName)
+	m.App.Session.Put(r.Context(), "user_username", username)
 	m.App.Session.Put(r.Context(), "user_first_name", firstName)
 	m.App.Session.Put(r.Context(), "user_last_name", lastName)
+	m.App.Session.Put(r.Context(), "user_email", userEmail)
 
 	if rememberMe {
 		m.App.Session.Put(r.Context(), "remember_me", true)
@@ -228,9 +232,10 @@ func (m *Repository) PostVerify(w http.ResponseWriter, r *http.Request) {
 
 	// Clean up verification session
 	m.App.Session.Remove(r.Context(), "pending_user_id")
-	m.App.Session.Remove(r.Context(), "pending_user_name")
+	m.App.Session.Remove(r.Context(), "pending_user_username")
 	m.App.Session.Remove(r.Context(), "pending_user_first_name")
 	m.App.Session.Remove(r.Context(), "pending_user_last_name")
+	m.App.Session.Remove(r.Context(), "pending_user_email")
 	m.App.Session.Remove(r.Context(), "verification_code")
 	m.App.Session.Remove(r.Context(), "code_expires")
 	m.App.Session.Remove(r.Context(), "pending_remember_me")
@@ -267,7 +272,7 @@ func (m *Repository) ResendCode(w http.ResponseWriter, r *http.Request) {
 	// Send verification email
 	err = m.EmailService.SendVerificationCode(user.Email, code)
 	if err != nil {
-		log.Println("Email send error:", err)
+		log.Println("E-mail send error:", err)
 		m.App.Session.Put(r.Context(), "error", "Unable to send verification code. Please try again.")
 		http.Redirect(w, r, "/verify", http.StatusSeeOther)
 		return

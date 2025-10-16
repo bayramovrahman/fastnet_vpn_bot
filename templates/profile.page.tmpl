@@ -36,7 +36,7 @@
             <div class="col ">
               <div class="d-flex align-items-center">
                 <div class="position-relative">
-                  <img src="/static/images/users/avatar-5.jpg" alt="" class="rounded-circle img-fluid">
+                  <img src="/static/images/fastnet.jpg" width="128" height="128" alt="" class="rounded-circle img-fluid">
                   <div class="position-absolute top-50 start-100 translate-middle">
                     <img src="/static/images/flags/us_flag.jpg" alt=""
                       class="rounded-circle thumb-sm border border-3 border-white">
@@ -44,7 +44,7 @@
                 </div>
                 <div class="flex-grow-1 text-truncate ms-3 align-self-end">
                   <h5 class="m-0 fs-3 fw-bold">{{.StringMap.user_first_name}} {{.StringMap.user_last_name}}</h5>
-                  <p class="text-muted mb-0">@{{.StringMap.user_name}}</p>
+                  <p class="text-muted mb-0">@{{.StringMap.user_username}}</p>
                 </div><!--end media body-->
               </div><!--end media-->
             </div><!--end col-->
@@ -90,10 +90,10 @@
                 </div>
               </div>
               <div class="form-group mb-3 row">
-                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">Email Address</label>
+                <label class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label">E-mail Address</label>
                 <div class="col-lg-9 col-xl-8">
                   <div class="input-group">
-                    <input type="text" class="form-control" value="rosa.dodson@demo.com" aria-describedby="basic-addon2" disabled>
+                    <input type="text" class="form-control" value="{{.StringMap.user_email}}" aria-describedby="basic-addon2" disabled>
                     <span class="input-group-text" id="basic-addon2"><i class="fas fa-envelope"></i></span>
                   </div>
                 </div>

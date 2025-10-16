@@ -32,6 +32,8 @@ func AddDefaultData(tmplData *models.TemplateData, r *http.Request) *models.Temp
 		
 		firstName := app.Session.GetString(r.Context(), "user_first_name")
 		lastName := app.Session.GetString(r.Context(), "user_last_name")
+		username := app.Session.GetString(r.Context(), "user_username")
+		email := app.Session.GetString(r.Context(), "user_email")
 		
 		if tmplData.StringMap == nil {
 			tmplData.StringMap = make(map[string]string)
@@ -39,6 +41,8 @@ func AddDefaultData(tmplData *models.TemplateData, r *http.Request) *models.Temp
 
 		tmplData.StringMap["user_first_name"] = firstName
 		tmplData.StringMap["user_last_name"] = lastName
+		tmplData.StringMap["user_username"] = username
+		tmplData.StringMap["user_email"] = email
 	}
 
 	return tmplData

@@ -31,11 +31,18 @@
                                 </div>
                                 <div class="card-body pt-0">
                                     {{if .Error}}
-                                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                                        {{.Error}}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
+                                    <div class="alert alert-danger alert-dismissible fade show  border-start border-2 border-danger mb-0" role="alert">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="fas fa-skull-crossbones align-self-center fs-30 text-danger "></i>
+                                            <div class="flex-grow-1 ms-2 text-truncate">
+                                                <h5 class="mb-1 fw-bold mt-0">Attention</h5>
+                                                <p class="mb-0">{{.Error}}</p>
+                                            </div><!--end media-body-->
+                                        </div>                                       
+                                    </div> 
                                     {{end}}
+
+                                     
 
                                     <form method="post" action="/login" class="my-4" novalidate>
                                         <input type="hidden" name="csrf_token" value="{{.CsrfToken}}">
