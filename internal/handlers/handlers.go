@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -53,7 +54,26 @@ func (m *Repository) Taxes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) Profile(w http.ResponseWriter, r *http.Request) {
-	render.Template(w, r, "profile.page.tmpl", &models.TemplateData{})
+	userID := m.App.Session.GetInt(r.Context(), "user_id")
+	
+	// Get user security settings
+	security, err := m.DB.GetUserLoginSecurity(userID)
+	if err != nil {
+		log.Println("Error getting security settings:", err)
+		security.EmailVerification = false
+		security.PhoneVerification = false
+		security.MultiFactorAuth = false
+	}
+
+	// Prepare template data
+	stringMap := make(map[string]string)
+	stringMap["email_verification"] = fmt.Sprintf("%t", security.EmailVerification)
+	stringMap["phone_verification"] = fmt.Sprintf("%t", security.PhoneVerification)
+	stringMap["multi_factor_auth"] = fmt.Sprintf("%t", security.MultiFactorAuth)
+
+	render.Template(w, r, "profile.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
 
 func (m *Repository) Login(w http.ResponseWriter, r *http.Request) {
@@ -292,4 +312,58 @@ func (m *Repository) Logout(w http.ResponseWriter, r *http.Request) {
 	_ = m.App.Session.RenewToken(r.Context())
 
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+// UpdateSecuritySetting handles AJAX requests to update security settings
+func (m *Repository) UpdateSecuritySetting(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"success": false, "message": "Unable to parse form"}`))
+		return
+	}
+
+	userID := m.App.Session.GetInt(r.Context(), "user_id")
+	settingType := r.Form.Get("type")
+	value := r.Form.Get("value") == "true"
+
+	security, err := m.DB.GetUserLoginSecurity(userID)
+	if err != nil {
+		log.Println("Error getting security settings:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"success": false, "message": "Unable to get security settings"}`))
+		return
+	}
+
+	switch settingType {
+	case "email_verification":
+		security.EmailVerification = value
+	case "phone_verification":
+		security.PhoneVerification = value
+	case "multi_factor_auth":
+		security.MultiFactorAuth = value
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"success": false, "message": "Invalid setting type"}`))
+		return
+	}
+
+	err = m.DB.UpdateUserLoginSecurity(security)
+	if err != nil {
+		log.Println("Error updating security settings:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"success": false, "message": "Unable to update security settings"}`))
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	
+	statusText := "disabled"
+	if value {
+		statusText = "enabled"
+	}
+	
+	response := fmt.Sprintf(`{"success": true, "message": "Successfully %s"}`, statusText)
+	w.Write([]byte(response))
 }

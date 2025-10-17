@@ -29,6 +29,7 @@ func routes() http.Handler {
 		r.Get("/logout", handlers.Repo.Logout)
 		r.Get("/profile", handlers.Repo.Profile)
 		r.Get("/invoice", handlers.Repo.Invoice)
+		r.Post("/update-security-setting", handlers.Repo.UpdateSecuritySetting)
 	})
 
 	fileServer := http.FileServer(http.Dir("./static/"))

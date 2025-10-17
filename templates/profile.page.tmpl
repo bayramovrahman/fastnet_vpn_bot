@@ -130,7 +130,6 @@
                     <input type="password" class="form-control" placeholder="Re-Password" aria-describedby="basic-addon2">
                     <span span class="input-group-text" id="basic-addon2"><i class="fas fa-redo"></i></span>
                   </div>
-                  <!-- <input class="form-control" type="password" placeholder="Re-Password"> -->
                 </div>
               </div>
               <div class="form-group row">
@@ -146,23 +145,35 @@
             </div><!--end card-header-->
             <div class="card-body pt-0">
               <div class="form-check d-flex align-items-center justify-content-between">
-                <label class="form-check-label mb-0" for="Email_Notifications">E-mail Verification</label>
+                <label class="form-check-label mb-0" for="emailVerificationSwitch">E-mail Verification</label>
                 <div class="form-check form-switch form-switch-success m-0">
-                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess" checked>
+                  <input class="form-check-input security-toggle" 
+                         type="checkbox" 
+                         id="emailVerificationSwitch"
+                         data-type="email_verification"
+                         {{if eq .StringMap.email_verification "true"}}checked{{end}}>
                 </div>
               </div>
 
               <div class="form-check d-flex align-items-center justify-content-between mt-3">
-                <label class="form-check-label mb-0" for="Email_Notifications">Phone Verification</label>
+                <label class="form-check-label mb-0" for="phoneVerificationSwitch">Phone Verification</label>
                 <div class="form-check form-switch form-switch-success m-0">
-                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                  <input class="form-check-input security-toggle" 
+                         type="checkbox" 
+                         id="phoneVerificationSwitch"
+                         data-type="phone_verification"
+                         {{if eq .StringMap.phone_verification "true"}}checked{{end}}>
                 </div>
               </div>
 
               <div class="form-check d-flex align-items-center justify-content-between mt-3">
-                <label class="form-check-label mb-0" for="Email_Notifications">2-FA Authentication</label>
+                <label class="form-check-label mb-0" for="multiFactorAuthSwitch">2-FA Authentication</label>
                 <div class="form-check form-switch form-switch-success m-0">
-                  <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                  <input class="form-check-input security-toggle" 
+                         type="checkbox" 
+                         id="multiFactorAuthSwitch"
+                         data-type="multi_factor_auth"
+                         {{if eq .StringMap.multi_factor_auth "true"}}checked{{end}}>
                 </div>
               </div>
             </div><!--end card-body-->
@@ -172,4 +183,83 @@
     </div> <!--end col-->
   </div><!--end row-->
 </div><!-- container -->
+{{ end }}
+
+{{ define "js" }}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const securityToggles = document.querySelectorAll('.security-toggle');
+    
+    securityToggles.forEach(function(toggle) {
+        toggle.addEventListener('change', function() {
+            const settingType = this.getAttribute('data-type');
+            const isChecked = this.checked;
+            const toggleElement = this;
+            
+            // Disable toggle while processing
+            toggleElement.disabled = true;
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('type', settingType);
+            formData.append('value', isChecked);
+            formData.append('csrf_token', '{{.CsrfToken}}');
+            
+            // Send AJAX request
+            fetch('/update-security-setting', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Re-enable toggle
+                toggleElement.disabled = false;
+                
+                if (data.success) {
+                    // Show success toast notification
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                    
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    });
+                } else {
+                    // Revert toggle on error
+                    toggleElement.checked = !isChecked;
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to update security setting'
+                    });
+                }
+            })
+            .catch(error => {
+                // Re-enable toggle and revert on error
+                toggleElement.disabled = false;
+                toggleElement.checked = !isChecked;
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while updating the setting'
+                });
+                
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
 {{ end }}
