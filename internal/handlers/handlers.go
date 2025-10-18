@@ -129,7 +129,31 @@ func (m *Repository) PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate verification code
+	// Check if email verification is enabled for this user
+	security, err := m.DB.GetUserLoginSecurity(id)
+	if err != nil {
+		log.Println("Error getting security settings:", err)
+		security.EmailVerification = true // If we can't get security settings, default to requiring verification
+	}
+
+	// If email verification is disabled, log user in directly
+	if !security.EmailVerification {
+		m.App.Session.Put(r.Context(), "user_id", id)
+		m.App.Session.Put(r.Context(), "user_username", user.Username)
+		m.App.Session.Put(r.Context(), "user_first_name", user.FirstName)
+		m.App.Session.Put(r.Context(), "user_last_name", user.LastName)
+		m.App.Session.Put(r.Context(), "user_email", user.Email)
+
+		if rememberMe == "on" {
+			m.App.Session.Put(r.Context(), "remember_me", true)
+		}
+
+		m.App.Session.Put(r.Context(), "flash", "Logged in successfully")
+		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		return
+	}
+
+	// Email verification is enabled - send verification code
 	code, err := email.GenerateVerificationCode()
 	if err != nil {
 		log.Println(err)
