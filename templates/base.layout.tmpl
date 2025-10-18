@@ -263,7 +263,7 @@
               <a class="dropdown-item" href="/profile"><i
                   class="las la-cog fs-18 me-1 align-text-bottom"></i>Settings</a>
               <div class="dropdown-divider mb-0"></div>
-              <a class="dropdown-item text-danger" href="/logout"><i
+              <a class="dropdown-item text-danger" href="#" id="logoutBtn"><i
                   class="las la-power-off fs-18 me-1 align-text-bottom"></i> Logout</a>
             </div>
           </li>
@@ -404,9 +404,6 @@
   </div>
   <!-- end page-wrapper -->
 
-  <!-- Javascript  -->
-  <!-- vendor js -->
-
   <script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/static/libs/simplebar/simplebar.min.js"></script>
   <script src="/static/libs/apexcharts/apexcharts.min.js"></script>
@@ -414,6 +411,39 @@
   <script src="/static/js/pages/index.init.js"></script>
   <script src="/static/js/DynamicSelect.js"></script>
   <script src="/static/js/app.js"></script>
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Logout Confirmation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const logoutBtn = document.getElementById('logoutBtn');
+      
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to logout from your account?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22c55e',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Yes, logout!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = '/logout';
+            }
+          });
+        });
+      }
+    });
+  </script>
+  
   {{ block "js" .}}{{ end }}
 </body>
 <!--end body-->
