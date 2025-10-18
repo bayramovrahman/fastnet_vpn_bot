@@ -14,6 +14,7 @@
   <link href="/static/css/icons.min.css" rel="stylesheet" type="text/css" />
   <link href="/static/css/app.css" rel="stylesheet" type="text/css" />
   <link href="/static/css/app.min.css" rel="stylesheet" type="text/css" />
+  <link href="/static/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -397,25 +398,21 @@
           </div>
         </div>
       </footer>
-
-      <!--end footer-->
     </div>
-    <!-- end page content -->
   </div>
   <!-- end page-wrapper -->
 
   <script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="/static/libs/simplebar/simplebar.min.js"></script>
   <script src="/static/libs/apexcharts/apexcharts.min.js"></script>
+  <script src="/static/js/pages/sweet-alert.init.js"></script>
   <script src="https://apexcharts.com/samples/assets/stock-prices.js"></script>
   <script src="/static/js/pages/index.init.js"></script>
   <script src="/static/js/DynamicSelect.js"></script>
   <script src="/static/js/app.js"></script>
-  
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <!-- Logout Confirmation Script -->
+  <script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
+  <script src="/static/js/pages/sweet-alert.init.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const logoutBtn = document.getElementById('logoutBtn');
@@ -446,8 +443,6 @@
   
   {{ block "js" .}}{{ end }}
 </body>
-<!--end body-->
-
 </html>
 
 {{ end }}

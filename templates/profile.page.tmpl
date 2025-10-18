@@ -186,80 +186,69 @@
 {{ end }}
 
 {{ define "js" }}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/static/libs/sweetalert2/sweetalert2.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const securityToggles = document.querySelectorAll('.security-toggle');
-    
-    securityToggles.forEach(function(toggle) {
-        toggle.addEventListener('change', function() {
-            const settingType = this.getAttribute('data-type');
-            const isChecked = this.checked;
-            const toggleElement = this;
-            
-            // Disable toggle while processing
-            toggleElement.disabled = true;
-            
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('type', settingType);
-            formData.append('value', isChecked);
-            formData.append('csrf_token', '{{.CsrfToken}}');
-            
-            // Send AJAX request
-            fetch('/update-security-setting', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Re-enable toggle
-                toggleElement.disabled = false;
-                
-                if (data.success) {
-                    // Show success toast notification
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                    
-                    Toast.fire({
-                        icon: 'success',
-                        title: data.message
-                    });
-                } else {
-                    // Revert toggle on error
-                    toggleElement.checked = !isChecked;
-                    
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.message || 'Failed to update security setting'
-                    });
-                }
-            })
-            .catch(error => {
-                // Re-enable toggle and revert on error
-                toggleElement.disabled = false;
-                toggleElement.checked = !isChecked;
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred while updating the setting'
-                });
-                
-                console.error('Error:', error);
-            });
-        });
-    });
-});
+  document.addEventListener('DOMContentLoaded', function() {
+      const securityToggles = document.querySelectorAll('.security-toggle');
+      securityToggles.forEach(function(toggle) {
+          toggle.addEventListener('change', function() {
+              const settingType = this.getAttribute('data-type');
+              const isChecked = this.checked;
+              const toggleElement = this;
+              
+              // Disable toggle while processing
+              toggleElement.disabled = true;
+              const formData = new FormData();
+              formData.append('type', settingType);
+              formData.append('value', isChecked);
+              formData.append('csrf_token', '{{.CsrfToken}}');
+              
+              // Send AJAX request
+              fetch('/update-security-setting', {
+                  method: 'POST',
+                  body: formData
+              }).then(response => response.json()).then(data => {
+                  toggleElement.disabled = false;
+                  
+                  if (data.success) {
+                      const Toast = Swal.mixin({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 3000,
+                          timerProgressBar: true,
+                          didOpen: (toast) => {
+                              toast.addEventListener('mouseenter', Swal.stopTimer)
+                              toast.addEventListener('mouseleave', Swal.resumeTimer)
+                          }
+                      });
+                      
+                      Toast.fire({
+                          icon: 'success',
+                          title: data.message
+                      });
+                  } else {
+                      toggleElement.checked = !isChecked;
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Error',
+                          text: data.message || 'Failed to update security setting'
+                      });
+                  }
+              }).catch(error => {
+                  toggleElement.disabled = false;
+                  toggleElement.checked = !isChecked;
+                  
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: 'An error occurred while updating the setting'
+                  });
+                  
+                  console.error('Error:', error);
+              });
+          });
+      });
+  });
 </script>
 {{ end }}
